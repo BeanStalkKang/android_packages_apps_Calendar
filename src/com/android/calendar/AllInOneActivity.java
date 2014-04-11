@@ -345,8 +345,7 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
         }
 
         if (viewType == -1 || viewType > ViewType.MAX_VALUE) {
-            //viewType = Utils.getViewTypeFromIntentAndSharedPref(this);
-        	viewType = ViewType.MONTH;
+            viewType = Utils.getViewTypeFromIntentAndSharedPref(this);
         }
         mTimeZone = Utils.getTimeZone(this, mHomeTimeUpdater);
         Time t = new Time(mTimeZone);
@@ -507,6 +506,9 @@ public class AllInOneActivity extends AbstractCalendarActivity implements EventH
     @Override
     protected void onResume() {
         super.onResume();
+
+        // Check if the upgrade code has ever been run. If not, force a sync just this one time.
+        Utils.trySyncAndDisableUpgradeReceiver(this);
 
         // Must register as the first activity because this activity can modify
         // the list of event handlers in it's handle method. This affects who
